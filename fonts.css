@@ -1,0 +1,5 @@
+/* Timeless type family, copyright 2026 Timeless Ventures Private Limited.
+   Used under the Timeless Free Font License. See fonts/Timeless-LICENSE.txt. */
+@font-face{font-family:'Timeless Serif';font-style:normal;font-weight:200 700;font-display:swap;src:url(fonts/TimelessSerifVF.woff2) format('woff2')}
+@font-face{font-family:'Timeless Serif';font-style:italic;font-weight:300 700;font-display:swap;src:url(fonts/TimelessSerifItalicVF.woff2) format('woff2')}
+@font-face{font-family:'Timeless Sans';font-style:normal;font-weight:300 800;font-display:swap;src:url(fonts/TimelessSansVF.woff2) format('woff2')}
