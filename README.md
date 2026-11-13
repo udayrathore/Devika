@@ -18,7 +18,6 @@ Open <http://127.0.0.1:4173/>. You can also open `index.html` directly, or use t
 - `style.css`: consolidated responsive styles for the current design and print view.
 - `script.js`: navigation, print handling and the scroll-driven photo stack.
 - `hero.js`, `loader.js`, `gradient-wave.js`: active hero, arch loader and heading animations.
-- `type-controls.js`: browser-local typography, card colors and Original/Moving mesh controls.
 - `fonts.css`, `fonts/`: the full Timeless variable family and license.
 - `*.webp`: optimized photographs, agency mark and supplied signature.
 - `og-image.jpg`: 1200 × 630 social sharing artwork.
@@ -31,6 +30,8 @@ After editing:
 python3 scripts/build-standalone.py
 python3 scripts/check.py
 ```
+
+The current typography is fixed in the `:root` variables in `style.css`. There is no editing panel, settings persistence or alternate-theme switch.
 
 Keep vendor scripts unchanged; they retain their license notices. All font variations remain available. Image crops fill the scroll gallery; reduced-motion mode shows a static gallery instead.
 
