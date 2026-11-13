@@ -1,16 +1,36 @@
+"""Build the portable HTML without altering remote analytics or social metadata."""
 from pathlib import Path
-import base64,re
-r=Path(__file__).resolve().parents[1]
-(r/'standalone').mkdir(exist_ok=True)
-s=(r/'index.html').read_text()
-fontcss=(r/'fonts.css').read_text()
-for path in re.findall(r'url\((fonts/[^)]+)\)',fontcss):
- fontcss=fontcss.replace(path,('data:font/woff2;base64,' if path.endswith('.woff2') else 'data:font/ttf;base64,')+base64.b64encode((r/path).read_bytes()).decode())
-s=s.replace('<link rel="stylesheet" href="fonts.css">','<style>'+fontcss+'</style>').replace('<link rel="stylesheet" href="style.css">','<style>'+(r/'style.css').read_text()+'</style>')
-for name in ['gsap.min.js','ScrollTrigger.min.js','SplitText.min.js','script.js','type-controls.js','gradient-wave.js','hero.js','loader.js']:
- s=s.replace('<script src="'+name+'"></script>','<script>'+(r/name).read_text().replace('</script','<\\/script')+'</script>')
-for asset in ['lake-twilight.jpg','lake-day.jpg']:
- s=s.replace(asset,'data:image/jpeg;base64,'+base64.b64encode((r/asset).read_bytes()).decode())
-s=s.replace('celebration.jpg','data:image/jpeg;base64,'+base64.b64encode((r/'celebration.jpg').read_bytes()).decode())
-(r/'standalone/Devika-Sakhuja-Proposal.html').write_text(s)
-print('Created standalone/Devika-Sakhuja-Proposal.html')
+import base64,mimetypes,re
+ROOT=Path(__file__).resolve().parents[1]
+def data_uri(path):
+    mime=mimetypes.guess_type(path.name)[0] or 'application/octet-stream'
+    return 'data:'+mime+';base64,'+base64.b64encode(path.read_bytes()).decode()
+def build(root):
+    html=(root/'index.html').read_text()
+    html=re.sub(r'<link\b[^>]*\brel="preload"[^>]*>\n?', '',html)
+    def css_link(match):
+        path=root/match[1]
+        if not path.is_file():return match[0]
+        css=path.read_text()
+        def asset_url(m):
+            value=m[1].strip('\"\'')
+            asset=root/value
+            return 'url('+data_uri(asset)+')' if not value.startswith(('data:','http:','https:','#')) and asset.is_file() else m[0]
+        css=re.sub(r'url\(([^)]+)\)',asset_url,css)
+        return '<style>'+css+'</style>'
+    html=re.sub(r'<link rel="stylesheet" href="([^"]+)">',css_link,html)
+    def script(match):
+        path=root/match[1]
+        if match[1].startswith(('https:','http:')) or not path.is_file():return match[0]
+        return '<script>'+path.read_text().replace('</script','<\\/script')+'</script>'
+    html=re.sub(r'<script\b[^>]*\bsrc="([^"]+)"[^>]*></script>',script,html)
+    def image(match):
+        value=match[2];path=root/value
+        return match[1]+data_uri(path)+match[3] if not value.startswith(('https:','http:','data:','#')) and path.is_file() and path.suffix in ('.webp','.jpg','.png','.svg') else match[0]
+    html=re.sub(r'((?:src|href)=")([^"]+)(")',image,html)
+    return html
+if __name__=='__main__':
+    target=ROOT/'standalone/Devika-Sakhuja-Proposal.html'
+    target.parent.mkdir(exist_ok=True)
+    target.write_text(build(ROOT))
+    print('Created',target.relative_to(ROOT))

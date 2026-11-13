@@ -1,8 +1,101 @@
-const stages=[['DAYS 1–3','Discovery & Content Planning','Confirm the objectives, audiences, sitemap and portfolio structure. Review imagery, content and enquiry requirements.','Approved sitemap, template list and content checklist.',1,3],['DAYS 4–10','UX & Visual Design','Design key templates, navigation, galleries, enquiry flow and responsive layouts. Consolidate feedback and approve the visual direction.','Approved responsive website designs.',4,10],['DAYS 9–22','Website Development','Build approved templates, shared components and CMS structures. Connect enquiry handling and implement responsive interactions.','Working website and CMS on staging.',9,22],['DAYS 16–27','Content & Quality Assurance','Populate final client-supplied content. Test galleries, forms, links, mobile layouts, accessibility basics and performance. Resolve consolidated UAT feedback.','Content-complete staging website and UAT sign-off.',16,27],['DAYS 28–30','Launch & Handover','Complete final checks and client approval, configure the domain and publish. Hand over the repository, CMS access and editing guide.','Live website and handover; one month of post-launch bug fixes.',28,30]];
-document.querySelector('#timeline').innerHTML=stages.map(s=>`<article class="timeline-row"><span>${s[0]}</span><div><h3>${s[1]}</h3><p>${s[2]}</p><small>DELIVERABLES</small><p>${s[3]}</p></div></article>`).join('');
-document.querySelector('#gantt-rows').innerHTML=stages.map(s=>`<div class="gantt-row"><span>${s[1]}<br><small>${s[0].toLowerCase()}</small></span><div class="track"><div class="bar" style="margin-left:${(s[4]-1)/30*100}%;width:${(s[5]-s[4]+1)/30*100}%"></div></div></div>`).join('');
-const terms=[['Reviews, Approvals & Change Requests','The engagement includes up to two consolidated design review rounds and up to two consolidated UAT rounds on staging. The Client will nominate one approver to provide consolidated feedback and written approval of the sitemap, template list and designs before development. UAT checks the website against approved designs and agreed functionality; launch follows written UAT sign-off. The review-round allowance does not limit fixes required to meet the agreed scope. Changes to approved work or requests outside the agreed scope will be documented and agreed in writing before implementation.'],['Exclusions & Scope Clarifications','This proposal covers one branding and portfolio website for Devika Sakhuja with the agreed client enquiry journey. Separate websites, client accounts or portals, online bookings, payment collection, CRM implementation and complex workflow automation are excluded unless expressly agreed. Before commencement, the parties will agree engagement boundaries, template coverage, named third-party integrations and the launch content-entry list. Discovery will refine these into a detailed sitemap and template list for written approval within those boundaries.'],['Project Deliverables & Code Ownership','ArtWorksIT will create project-specific designs and custom code, using third-party components where appropriate and subject to their respective licences. Design handover includes editable Figma files, responsive layouts, reusable UI components and interaction notes. Code and documentation will be versioned through GitHub, with repository access, CMS administrator credentials, setup documentation and a CMS editing guide provided at final handover. Live CMS training is not included unless expressly agreed. Upon full payment, the Client will own the custom website code, design files and project-specific deliverables created by ArtWorksIT, excluding third-party software, libraries, frameworks, fonts, plugins, stock assets and other components subject to their respective licences.'],['Confidentiality & Data Security','Both parties agree to keep all shared information confidential and will not disclose it to third parties without prior written consent. This provision will remain effective after the project’s completion.'],['Client Responsibilities & Project Scope','The Client is responsible for providing all necessary project details, website requirements, content, business information, approved portfolio imagery and timely feedback. The Client will provide timely access to relevant stakeholders for decisions, approvals and clarification of functionality, and is responsible for permissions to use supplied content and imagery. Delays in requirements, content, approvals, feedback or other Client dependencies may result in corresponding changes to the project timeline.'],['Payment Terms & Financial Conditions','The total project fee is ₹2,00,000 inclusive of GST. Payment is split into two milestones: 50% (₹1,00,000 inclusive of GST) as advance on project commencement, and 50% (₹1,00,000 inclusive of GST) after go-live. Payments are due Net 7 days from the invoice date. Work begins once the advance is received. Payment delays may pause ongoing work until outstanding payments are cleared. The final milestone is invoiced after the website goes live. Hosting and maintenance are included for the first year from go-live; from year two, the annual charge is ₹15,000 plus GST. External services and licensed assets are additional unless expressly included.'],['Termination, Dispute Resolution & Governing Law','Either party may terminate the agreement in the event of a material breach by providing written notice. If terminated, the Client agrees to compensate ArtWorksIT for services rendered and applicable expenses. Disputes will first be addressed through good-faith negotiations. If unresolved, both parties consent to the exclusive jurisdiction of the courts in Bangalore. This agreement is governed by and construed under the laws of India.'],['Modifications & Entire Agreement','This document contains the full understanding between the parties and supersedes previous agreements. Any modifications must be in writing and signed by both parties.'],['Assumptions','The Client will provide final copy, approved images and other necessary assets. ArtWorksIT will populate client-supplied content for the launch list agreed before commencement; bulk content entry, migration, copywriting, translation and asset production are excluded unless expressly listed in scope. The one-month timeline depends on timely content, access and approvals. Hosting infrastructure limits, maintenance coverage and responsibilities will be agreed before deployment. Discovery refines the sitemap and functionality within agreed engagement boundaries; additions require separate written agreement.']];
-document.querySelector('#terms-list').innerHTML=terms.map((t,i)=>`<details><summary><span>0${i+1}</span>${t[0]}</summary><p>${t[1]}</p></details>`).join('');
-const toggle=document.querySelector('#nav-toggle'),links=document.querySelector('#section-links');function closeNav(){links.hidden=true;toggle.setAttribute('aria-expanded','false');document.querySelector('#nav-symbol').textContent='＋'}toggle.addEventListener('click',()=>{links.hidden=!links.hidden;toggle.setAttribute('aria-expanded',String(!links.hidden));document.querySelector('#nav-symbol').textContent=links.hidden?'＋':'−'});links.addEventListener('click',e=>{if(e.target.closest('a'))closeNav()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNav();toggle.focus()}});document.addEventListener('click',e=>{if(!e.target.closest('.section-nav'))closeNav()});
-const labels=['01 / Overview','02 / Scope','03 / Timeline','04 / Schedule','05 / Technology','06 / Investment','07 / Support','08 / Terms'];const sections=[...document.querySelectorAll('main section')];const observer=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting)document.querySelector('#current-section').textContent=labels[sections.indexOf(e.target)]},{rootMargin:'-15% 0px -65% 0px'});sections.forEach(s=>observer.observe(s));
-let openBeforePrint=[];window.addEventListener('beforeprint',()=>{openBeforePrint=[...document.querySelectorAll('details')].filter(d=>d.open);document.querySelectorAll('details').forEach(d=>d.open=true)});window.addEventListener('afterprint',()=>document.querySelectorAll('details').forEach(d=>d.open=openBeforePrint.includes(d)));document.querySelector('#print').addEventListener('click',()=>window.print());
+const toggle = document.querySelector("#nav-toggle"),
+  links = document.querySelector("#section-links");
+function closeNav() {
+  links.hidden = true;
+  toggle.setAttribute("aria-expanded", "false");
+  document.querySelector("#nav-symbol").textContent = "＋";
+}
+toggle.addEventListener("click", () => {
+  links.hidden = !links.hidden;
+  toggle.setAttribute("aria-expanded", String(!links.hidden));
+  document.querySelector("#nav-symbol").textContent = links.hidden ? "＋" : "−";
+});
+links.addEventListener("click", (e) => {
+  if (e.target.closest("a")) closeNav();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeNav();
+    toggle.focus();
+  }
+});
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".section-nav")) closeNav();
+});
+const sections = [...document.querySelectorAll("main section")];
+const labels = [...document.querySelectorAll("#section-links a")].map((link) =>
+  link.textContent.replace(/^(\d+) /, "$1 / "),
+);
+const observer = new IntersectionObserver(
+  (entries) => {
+    for (const e of entries)
+      if (e.isIntersecting)
+        document.querySelector("#current-section").textContent =
+          labels[sections.indexOf(e.target)];
+  },
+  { rootMargin: "-15% 0px -65% 0px" },
+);
+sections.forEach((s) => observer.observe(s));
+let openBeforePrint = [];
+window.addEventListener("beforeprint", () => {
+  openBeforePrint = [...document.querySelectorAll("details")].filter(
+    (d) => d.open,
+  );
+  document.querySelectorAll("details").forEach((d) => (d.open = true));
+});
+window.addEventListener("afterprint", () =>
+  document
+    .querySelectorAll("details")
+    .forEach((d) => (d.open = openBeforePrint.includes(d))),
+);
+document
+  .querySelector("#print")
+  .addEventListener("click", () => window.print());
+
+// Scroll reveals the photographs inside a sticky, edge-to-edge frame.
+(() => {
+  const root = document.querySelector(".direction-scroll-stack");
+  if (!root || !window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+  const slides = [...root.querySelectorAll(".direction-slide")];
+  const count = root.querySelector(".direction-stack-count");
+  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+    root.classList.add("is-scroll-driven");
+    gsap.set(slides.slice(1), { clipPath: "inset(100% 0% 0% 0%)" });
+    const sequence = gsap.timeline({
+      scrollTrigger: {
+        trigger: root,
+        start: "top 18%",
+        end: "bottom 83%",
+        scrub: 0.45,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          count.textContent =
+            String(
+              Math.min(
+                slides.length,
+                Math.floor(self.progress * (slides.length - 1)) + 1,
+              ),
+            ).padStart(2, "0") + " / 05";
+        },
+      },
+    });
+    slides.slice(1).forEach((slide, i) => {
+      sequence.to(
+        slide,
+        { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "none" },
+        i,
+      );
+      sequence.fromTo(
+        slide.querySelector("img"),
+        { scale: 1.08 },
+        { scale: 1, duration: 1, ease: "none" },
+        i,
+      );
+    });
+    return () => {
+      root.classList.remove("is-scroll-driven");
+      count.textContent = "01 / 05";
+    };
+  });
+})();
